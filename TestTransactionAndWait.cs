@@ -4,7 +4,7 @@ using StackExchange.Redis;
 public class TestTransactionAndWait
 {
 	private static Lazy<ConnectionMultiplexer> TxnlazyConnection = new Lazy<ConnectionMultiplexer>(() => {
-		return ConnectionMultiplexer.Connect("redis-14000.cluster4.virag.demo-rlec.redislabs.com:14000, abortConnect=false, connectRetry=5, connectTimeout=5000, ssl=false, password=''");
+		return ConnectionMultiplexer.Connect("<Redis_DB_URL>:<Redis_DB_PORT>, abortConnect=false, connectRetry=5, connectTimeout=5000, ssl=false, password=''");
 		});
 	
 	public static ConnectionMultiplexer Conn_Txn {
@@ -13,7 +13,7 @@ public class TestTransactionAndWait
 			}
 		}
 	private static Lazy<ConnectionMultiplexer> nonTxnlazyConnection = new Lazy<ConnectionMultiplexer>(() => {
-		return ConnectionMultiplexer.Connect("redis-14000.cluster4.virag.demo-rlec.redislabs.com:14000, abortConnect=false, connectRetry=5, connectTimeout=5000, ssl=false, password=''");
+		return ConnectionMultiplexer.Connect("<Redis_DB_URL>:<Redis_DB_PORT>, abortConnect=false, connectRetry=5, connectTimeout=5000, ssl=false, password=''");
 		});
 	
 	public static ConnectionMultiplexer Conn_NonTxn {
@@ -82,23 +82,22 @@ public class TestTransactionAndWait
         Console.WriteLine("\nCache command  : " + cacheCommand);
         Console.WriteLine("Cache response : \n" + non_txn_redis.Execute("CLIENT", "LIST").ToString().Replace("id=", "id="));
 
-		var trans2 = txn_redis.CreateTransaction();
-		trans2.AddCondition(Condition.HashNotExists(hashKey, "first_name"));
-		trans2.HashSetAsync(hashKey, redisPersonHash2, CommandFlags.FireAndForget);
-		bool committed = trans2.Execute();
-		// ^^^ if true: it was applied; if false: it was rolled back
-		// add additional logic for cleanup if necessary
+	var trans2 = txn_redis.CreateTransaction();
+	trans2.AddCondition(Condition.HashNotExists(hashKey, "first_name"));
+	trans2.HashSetAsync(hashKey, redisPersonHash2, CommandFlags.FireAndForget);
+	bool committed = trans2.Execute();
+	// ^^^ if true: it was applied; if false: it was rolled back
+	// add additional logic for cleanup if necessary
 	
-		var allHash = non_txn_redis.HashGetAll(hashKey);
+	var allHash = non_txn_redis.HashGetAll(hashKey);
 
-		//get all the items
-        foreach (var item in allHash)
-		{
-			Console.WriteLine(string.Format("key : {0}, value : {1}", item.Name, item.Value));
-		}
+	//get all the items
+        foreach (var item in allHash) {
+		Console.WriteLine(string.Format("key : {0}, value : {1}", item.Name, item.Value));
+	}
 
-		// destroy the connections 
-		TxnlazyConnection.Value.Dispose();
-		nonTxnlazyConnection.Value.Dispose();
+	// destroy the connections 
+	TxnlazyConnection.Value.Dispose();
+	nonTxnlazyConnection.Value.Dispose();
 	}
 }
