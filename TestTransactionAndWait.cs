@@ -173,18 +173,13 @@ public class TestTransactionAndWait
         var firstIntBeforeWait = int.Parse((string)resultBeforeWait[0]);
         var secondIntBeforeWait = int.Parse((string)resultBeforeWait[1]);
 
-        // anything but 0 as timeout otherwise you'll get a timeout exception if slave is down 
-        // because of the default syncTimeout=5000ms. either increase the value of syncTimeout e.g. syncTimeout=100000 or use >0
-        // see configurations https://stackexchange.github.io/StackExchange.Redis/Configuration.html
-        /* see the https://stackexchange.github.io/StackExchange.Redis/Timeouts for details
-		Unhandled exception. StackExchange.Redis.RedisTimeoutException: Timeout performing UNKNOWN (5000ms), next: WAIT, inst: 0, qu: 0, qs: 1, aw: False, rs: ReadAsync, ws: Idle, in: 0, in-pipe: 0, out-pipe: 0, serverEndpoint: Unspecified/redis-12000.cluster4.virag.demo-rlec.redislabs.com:12000, mgr: 10 of 10 available, clientName: Virag-Tripathis-MacBook-Pro, IOCP: (Busy=0,Free=1000,Min=4,Max=1000), WORKER: (Busy=0,Free=32767,Min=4,Max=32767), v: 2.0.601.3402 (Please take a look at this article for some common client-side issues that can cause timeouts: https://stackexchange.github.io/StackExchange.Redis/Timeouts)
-   at StackExchange.Redis.ConnectionMultiplexer.ExecuteSyncImpl[T](Message message, ResultProcessor`1 processor, ServerEndPoint server) in C:\projects\stackexchange-redis\src\StackExchange.Redis\ConnectionMultiplexer.cs:line 2250
-   at StackExchange.Redis.RedisBase.ExecuteSync[T](Message message, ResultProcessor`1 processor, ServerEndPoint server) in C:\projects\stackexchange-redis\src\StackExchange.Redis\RedisBase.cs:line 54
-   at StackExchange.Redis.RedisDatabase.Execute(String command, ICollection`1 args, CommandFlags flags) in C:\projects\stackexchange-redis\src\StackExchange.Redis\RedisDatabase.cs:line 1149
-   at StackExchange.Redis.RedisDatabase.Execute(String command, Object[] args) in C:\projects\stackexchange-redis\src\StackExchange.Redis\RedisDatabase.cs:line 1145
-   at TestTransactionAndWait.Main() in /Users/viragtripathi/dotnet/redisdotnetdemo/TestTransactionAndWait.cs:line 60
-		*/
         RedisResult waitResult = txn_redis.Execute("WAIT", "1", "50");
+        var waitResultResp = (RedisResult)waitResult;
+        var numreplicas = int.Parse((string)waitResultResp);
+        Console.WriteLine($"numreplicas : {numreplicas}");
+        if (numreplicas != 1) {
+            Console.WriteLine($"It's taking longer than supplied WAIT timeout period : {numreplicas}");
+        }
 
         RedisResult timeAfterWait = txn_redis.Execute("TIME");
         watch.Stop();
