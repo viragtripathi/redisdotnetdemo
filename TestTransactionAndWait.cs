@@ -176,9 +176,9 @@ public class TestTransactionAndWait
         RedisResult waitResult = txn_redis.Execute("WAIT", "1", "50");
         var waitResultResp = (RedisResult)waitResult;
         var numreplicas = int.Parse((string)waitResultResp);
-        Console.WriteLine($"numreplicas : {numreplicas}");
+        Console.WriteLine($"** REPLICA UP ==> numreplicas = {numreplicas}");
         if (numreplicas != 1) {
-            Console.WriteLine($"It's taking longer than supplied WAIT timeout period : {numreplicas}");
+            Console.WriteLine($"** REPLICA DOWN ==> numreplicas = {numreplicas}");
         }
 
         RedisResult timeAfterWait = txn_redis.Execute("TIME");
@@ -191,9 +191,8 @@ public class TestTransactionAndWait
         var totalMicroSecAfter = firstIntAfterWait * 1000000 + secondIntAfterWait;
 
         Console.WriteLine("TIME elapsed since the WAIT : " + (totalMicroSecAfter - totalMicroSecBefore) * .001 + " ms" +
-        " <== This includes client perceived latency and the sync time between master and replica");
+        " <== This includes client perceived latency");
         Console.WriteLine($"Response from 1st transaction in RE DB (with WAIT), Execution Time: {watch.ElapsedMilliseconds} ms");
-
 
         if (!watch.IsRunning)
             watch.Restart(); // Reset time to 0 and start measuring
