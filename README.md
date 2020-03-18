@@ -1,37 +1,20 @@
-## Welcome to GitHub Pages
+# Redis DOTNET Demo
 
-You can use the [editor on GitHub](https://github.com/viragtripathi/redisdotnetdemo/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+### Prerequisites
+Setup .Net environment with VS Code and .Net Core or execute the code <a href="https://dotnetfiddle.net/">online</a>
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+## Steps to setup .Net development environment locally
 
-### Markdown
+1. Download and install VS Code for Windows, macOS, and Linux on <a href="https://code.visualstudio.com/Download">Visual Studio Code's website</a>.
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+2. Download and install <a href="https://dotnet.microsoft.com/download">.NET Framework and .NET Core, including ASP.NET and ASP.NET Core</a>.
 
-```markdown
-Syntax highlighted code block
+3. <a href="https://code.visualstudio.com/docs/languages/csharp#_installing-c35-support">Installing C# support</a>
 
-# Header 1
-## Header 2
-### Header 3
+## Steps to run the demo
 
-- Bulleted
-- List
+Run the project in the current directory:
+dotnet run
 
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/viragtripathi/redisdotnetdemo/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+Run the specified project:
+dotnet run --project <path_to_dotnet.csproj>
